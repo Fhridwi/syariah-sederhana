@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('madrasah_diniyah')->nullable();
             $table->string('telepon_orang_tua')->nullable();
             $table->string('foto')->nullable(); 
+            $table->enum('status_santri', ['aktif', 'alumni'])->default('aktif');
             $table->timestamps();
         });
         

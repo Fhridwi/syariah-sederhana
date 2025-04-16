@@ -1,8 +1,14 @@
 <?php
 
+use App\Http\Controllers\AngkatanController;
 use App\Http\Controllers\BerandaAdminController;
+use App\Http\Controllers\JenisPembayaranController;
+use App\Http\Controllers\PosTagihanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SantriController;
+use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\TagihanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,6 +42,14 @@ Route::middleware('auth')->group(function () {
 //Route khusus admin 
 Route::prefix('admin')->middleware(['auth', 'akses:admin'])->group( function() {
     Route::get('beranda', [BerandaAdminController::class, 'index'])->name('admin.beranda');
+    Route::resource('program', ProgramController::class);
+    Route::resource('sekolahformal', SekolahController::class);
+    Route::resource('angkatan', AngkatanController::class);
+    Route::post('/angkatan/{id}/set-aktif', [AngkatanController::class, 'setAktif'])->name('angkatan.setAktif');
+    Route::resource('postagihan', PosTagihanController::class );
+    Route::resource('jenis-pembayaran', JenisPembayaranController::class);
+
+
     Route::resource('datasantri', SantriController::class);
 });
 

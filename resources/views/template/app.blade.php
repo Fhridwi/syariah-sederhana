@@ -35,6 +35,7 @@
     <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
   </div> --}}
 
+
 <!-- Navbar -->
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -140,6 +141,12 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
+          @if(session('success'))
+          <div class="alert alert-success alert-dismissible fade show mt-3 mx-3" role="alert">
+              {{ session('success') }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        @endif
             @yield('content')
       </div><!-- /.container-fluid -->
     </section>

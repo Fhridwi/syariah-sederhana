@@ -7,6 +7,8 @@ use App\Http\Requests\StoreSantriRequest;
 use App\Http\Requests\UpdateSantriRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+
 
 class SantriController extends Controller
 {
@@ -83,18 +85,32 @@ class SantriController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Santri $santri)
+    public function edit($id)
     {
-        //
+        $santri = Santri::findOrFail($id);
+
+        return view('admin.dataSantri.santri_edit', compact('santri'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateSantriRequest $request, Santri $santri)
-    {
-        //
+{
+    $data = $request->validated();
+
+    if ($request->hasFile('foto')) {
+        $foto = $request->file('foto');
+        $namaFile = 'santri-' . Str::slug($data['nama']) . '-' . time() . '.' . $foto->getClientOriginalExtension();
+        $foto->storeAs('public/foto-santri', $namaFile);
+        $data['foto'] = $namaFile;
     }
+
+    $santri->update($data);
+
+    return redirect()->route('datasantri.index')->with('success', 'Data santri berhasil diperbarui.');
+}
+
 
     /**
      * Remove the specified resource from storage.

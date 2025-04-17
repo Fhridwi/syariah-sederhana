@@ -9,6 +9,7 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SantriController;
 use App\Http\Controllers\SekolahController;
 use App\Http\Controllers\TagihanController;
+use App\Http\Controllers\TarifPembayaranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,6 +49,8 @@ Route::prefix('admin')->middleware(['auth', 'akses:admin'])->group( function() {
     Route::post('/angkatan/{id}/set-aktif', [AngkatanController::class, 'setAktif'])->name('angkatan.setAktif');
     Route::resource('postagihan', PosTagihanController::class );
     Route::resource('jenis-pembayaran', JenisPembayaranController::class);
+    Route::resource('tarif-pembayaran', TarifPembayaranController::class);
+
 
 
     Route::resource('datasantri', SantriController::class);

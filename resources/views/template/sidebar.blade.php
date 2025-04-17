@@ -75,6 +75,12 @@
             <p>Jenis Tagihan</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('tarif-pembayaran.index') }}" class="nav-link {{ Request::is('admin/tarif-pembayaran*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-money-bill-wave"></i>
+            <p>Tarif Pembayaran</p>
+          </a>
+        </li>
 
         {{-- ====== Logout ====== --}}
         <li class="nav-header">AKSES</li>

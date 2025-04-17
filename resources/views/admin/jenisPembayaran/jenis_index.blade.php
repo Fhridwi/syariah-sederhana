@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="col-md-12 card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0">Data Jenis Pembayaran</h3>
         <a href="{{ route('jenis-pembayaran.create') }}" class="btn btn-primary btn-sm">
             <i class="fas fa-plus me-1"></i> Tambah Jenis Pembayaran

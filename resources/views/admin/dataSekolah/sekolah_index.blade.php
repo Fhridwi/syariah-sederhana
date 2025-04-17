@@ -24,7 +24,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($sekolahFormals as $key => $sekolah)
+                        @forelse ($sekolahFormals as $key => $sekolah)
                             <tr>
                                 <td>{{ $sekolahFormals->firstItem() + $key }}</td>
                                 <td>{{ $sekolah->nama_sekolah }}</td>
@@ -43,8 +43,12 @@
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
-                    </tbody>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center">Tidak ada data sekolah formal</td>
+                            </tr>
+                        @endforelse
+                    </tbody>                    
                 </table>
                 {{ $sekolahFormals->links() }}
             </div>

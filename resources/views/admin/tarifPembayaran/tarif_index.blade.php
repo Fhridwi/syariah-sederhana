@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($data as $item)
+                @forelse($data as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->jenisPembayaran->nama_pembayaran }}</td>
@@ -29,8 +29,13 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center">Tidak ada data</td>
+                </tr>
+                @endforelse
             </tbody>
+            
         </table>
     </div>
 </div>

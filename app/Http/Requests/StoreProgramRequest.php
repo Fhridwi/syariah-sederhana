@@ -22,7 +22,7 @@ class StoreProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_program' => 'required|string|max:255|unique:program,nama_program', 
+            'nama_program' => 'required|string|max:255|unique:programs,nama_program', 
             'deskripsi_program' => 'required|string',
         ];
     }

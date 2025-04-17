@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('12121212'), 
             'remember_token' => Str::random(10),
         ]);
+        
     }
 }

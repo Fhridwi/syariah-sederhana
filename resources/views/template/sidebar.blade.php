@@ -81,6 +81,12 @@
             <p>Tarif Pembayaran</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="{{ route('tagihan.index') }}" class="nav-link {{ Request::is('admin/tagihan*') ? 'active' : '' }}">
+            <i class="nav-icon fas fa-money-bill-wave"></i>
+            <p>Tagihan Santri</p>
+          </a>
+        </li>
 
         {{-- ====== Logout ====== --}}
         <li class="nav-header">AKSES</li>

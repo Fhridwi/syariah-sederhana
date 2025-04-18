@@ -50,6 +50,8 @@ Route::prefix('admin')->middleware(['auth', 'akses:admin'])->group( function() {
     Route::resource('postagihan', PosTagihanController::class );
     Route::resource('jenis-pembayaran', JenisPembayaranController::class);
     Route::resource('tarif-pembayaran', TarifPembayaranController::class);
+    Route::resource('tagihan', TagihanController::class);
+
 
 
 

@@ -12,6 +12,7 @@ class TarifPembayaran extends Model
     protected $keyType = 'string';
 
     protected $fillable = ['id', 'jenis_pembayaran_id', 'nominal'];
+    protected $table = 'tarif_pembayaran';
 
     protected static function boot()
     {

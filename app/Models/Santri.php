@@ -21,4 +21,10 @@ class Santri extends Model
             }
         });
     }
+
+    public function tagihans()
+{
+    return $this->hasMany(Tagihan::class);
+}
+
 }

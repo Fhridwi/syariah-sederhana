@@ -27,8 +27,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="kontak" class="form-label">Kontak</label>
-                        <input type="text" name="kontak" id="kontak" class="form-control @error('kontak') is-invalid @enderror" value="{{ old('kontak') }}" placeholder="Masukkan nomor kontak (opsional)">
+                        <label for="jenjang" class="form-label">jenjang</label>
+                        <input type="text" name="jenjang" id="jenjang" class="form-control @error('jenjang') is-invalid @enderror" value="{{ old('jenjang') }}" placeholder="Masukkan nomor kontak (opsional)">
                         @error('kontak')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

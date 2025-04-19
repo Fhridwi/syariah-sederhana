@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('tagihans', function (Blueprint $table) {
         $table->uuid('id')->primary();
         $table->foreignUuid('santri_id')->index(); 
-        $table->foreignId('jenis_pembayaran_id')->index();
+        $table->foreignUuid('jenis_pembayaran_id')->index();
         $table->foreignUuid('tarif_pembayaran_id')->index(); 
         $table->integer('nominal');
         $table->enum('periode', ['bulanan', 'semesteran', 'tahunan']);

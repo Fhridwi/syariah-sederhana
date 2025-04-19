@@ -75,13 +75,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($bulanan as $i => $tagihan)
+                        @foreach ($bulanan as $tagihan)
                             @php
                                 $pembayaran = $tagihan->pembayaran;
                                 $sudahBayar = $pembayaran !== null;
                             @endphp
                             <tr>
-                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td>{{ $tagihan->bulan_tagihan }}</td>
                                 <td>Rp{{ number_format($tagihan->nominal, 0, ',', '.') }}</td>
                                 <td>
@@ -108,7 +108,7 @@
                                     @if (!$sudahBayar)
                                         <form action="{{ route('pembayaran.store') }}" method="POST" id="formBayar{{ $tagihan->id }}">
                                             @csrf
-                                            <input type="hidden" name="tagihan_id" value="{{ $tagihan->id }}">
+                                            <input type="hidden" name="tagihan_id" value="{{ $santri->id }}">
                                             <input type="hidden" name="santri_id" value="{{ $santri->id }}">
                                             <input type="hidden" name="nominal_pembayaran" value="{{ $tagihan->nominal }}">
                                             <input type="hidden" name="tanggal_pembayaran" value="{{ now()->format('Y-m-d') }}">

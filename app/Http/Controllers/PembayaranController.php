@@ -44,7 +44,8 @@ class PembayaranController extends Controller
                             })->get();
             }
         }
-    
+        $tagihanId = Tagihan::pluck('id');
+        dd($tagihanId);
         $tahunAjarans = angkatan::where('status', 'aktif')->pluck('tahun')->last();
     
         return view($this->route . '.' . $this->viewForm, compact('bulanan', 'santri', 'tahunAjarans'));

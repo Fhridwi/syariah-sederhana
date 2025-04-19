@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jenis_pembayarans', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignId('pos_tagihan_id')->index();
             $table->foreignId('tahun_ajaran_id')->index();
             $table->string('nama_pembayaran');

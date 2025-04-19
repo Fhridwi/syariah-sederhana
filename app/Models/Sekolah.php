@@ -12,5 +12,6 @@ class Sekolah extends Model
         'nama_sekolah',
         'alamat',
         'kontak',
+        'jenjang'
     ];
 }

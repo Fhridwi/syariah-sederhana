@@ -19,7 +19,7 @@
                             <th>No</th>
                             <th>Nama Sekolah</th>
                             <th>Alamat</th>
-                            <th>Kontak</th>
+                            <th>Jenjang</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -29,7 +29,7 @@
                                 <td>{{ $sekolahFormals->firstItem() + $key }}</td>
                                 <td>{{ $sekolah->nama_sekolah }}</td>
                                 <td>{{ $sekolah->alamat }}</td>
-                                <td>{{ $sekolah->kontak }}</td>
+                                <td>{{ $sekolah->jenjang }}</td>
                                 <td>
                                     <a href="{{ route('sekolahformal.edit', $sekolah->id) }}" class="btn btn-warning btn-sm">
                                         <i class="fas fa-edit"></i> Edit

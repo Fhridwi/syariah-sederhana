@@ -32,7 +32,7 @@ class TarifPembayaranController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'jenis_pembayaran_id' => 'required|exists:jenis_pembayaran,id',
+        'jenis_pembayaran_id' => 'required',
         'nominal' => 'required|numeric'
     ]);
 

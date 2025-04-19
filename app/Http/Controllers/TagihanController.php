@@ -74,6 +74,9 @@ class TagihanController extends Controller
 
     public function store(Request $request)
     {
+
+        dd($request->tagihan_id);  
+
         $request->validate([
             'santri_id' => 'required',
             'jenis_pembayaran_id' => 'required',
@@ -134,7 +137,6 @@ class TagihanController extends Controller
                     $jatuhTempo = Carbon::createFromDate($tahun, $i == 0 ? 8 : 2, 10);
     
                     Tagihan::create([
-                        'id' => Str::uuid(),
                         'santri_id' => $santri->id,
                         'jenis_pembayaran_id' => $request->jenis_pembayaran_id,
                         'tarif_pembayaran_id' => $request->tarif_pembayaran_id,
@@ -150,7 +152,6 @@ class TagihanController extends Controller
                 $jatuhTempo = Carbon::createFromDate($tahun1, 7, 10);
     
                 Tagihan::create([
-                    'id' => Str::uuid(),
                     'santri_id' => $santri->id,
                     'jenis_pembayaran_id' => $request->jenis_pembayaran_id,
                     'tarif_pembayaran_id' => $request->tarif_pembayaran_id,

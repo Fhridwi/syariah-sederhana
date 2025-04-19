@@ -19,8 +19,6 @@ return new class extends Migration
             $table->integer('nominal_pembayaran');
             $table->date('tanggal_pembayaran');
             $table->string('metode_pembayaran', 50);
-            $table->string('bank_pengirim', 100)->nullable();
-            $table->string('nama_pengirim', 100)->nullable();
             $table->string('penerima', 100);
             $table->string('bukti_transfer')->nullable();
             $table->enum('status', ['pending', 'terima', 'tolak'])->default('pending');

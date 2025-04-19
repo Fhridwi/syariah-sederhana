@@ -3,6 +3,7 @@
 use App\Http\Controllers\AngkatanController;
 use App\Http\Controllers\BerandaAdminController;
 use App\Http\Controllers\JenisPembayaranController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PosTagihanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
@@ -51,6 +52,7 @@ Route::prefix('admin')->middleware(['auth', 'akses:admin'])->group( function() {
     Route::resource('jenis-pembayaran', JenisPembayaranController::class);
     Route::resource('tarif-pembayaran', TarifPembayaranController::class);
     Route::resource('tagihan', TagihanController::class);
+    Route::resource('pembayaran', PembayaranController::class);
 
 
 

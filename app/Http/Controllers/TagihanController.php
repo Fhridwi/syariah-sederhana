@@ -98,10 +98,15 @@ class TagihanController extends Controller
         $tahun1 = $tahunAjaran[0];
         $tahun2 = $tahunAjaran[1];
     
-        // Jika santri_id adalah "all", ambil semua santri
         $santris = $request->santri_id === 'all'
-            ? Santri::all()
-            : Santri::where('id', $request->santri_id)->get();
+            ? Santri::where('status_santri', 'aktif')->get()
+            : Santri::where('id', $request->santri_id)
+                ->where('status_santri', 'aktif')
+                ->get();
+    
+        if ($santris->isEmpty()) {
+            return back()->withErrors(['santri_id' => 'Tidak ada santri aktif yang ditemukan.']);
+        }
     
         foreach ($santris as $santri) {
             if ($request->periode === 'bulanan') {
@@ -161,6 +166,7 @@ class TagihanController extends Controller
     
         return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil dibuat.');
     }
+    
 
     public function edit(string $id) {
         return view('admin.dataTagihan.tagihan_edit');

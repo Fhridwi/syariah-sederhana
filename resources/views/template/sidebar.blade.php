@@ -20,87 +20,111 @@
 
     <!-- Sidebar Menu -->
     <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
 
-        {{-- ====== Lainnya ====== --}}
+        <!-- DASHBOARD -->
         <li class="nav-header">DASHBOARD</li>
         <li class="nav-item">
           <a href="{{ route('admin.beranda') }}" class="nav-link {{ Request::is('admin/beranda') ? 'active' : '' }}">
             <i class="nav-icon fas fa-home"></i>
-            <p>Beranda</p>
+            <p>BERANDA</p>
           </a>
         </li>
 
-        {{-- ====== Data Master ====== --}}
-        <li class="nav-header">DATA MASTER</li>
-        <li class="nav-item">
-          <a href="{{ route('program.index') }}" class="nav-link {{ Request::is('admin/program*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-chalkboard-teacher"></i>
-            <p>Program Pesantren</p>
+        <!-- DATA MASTER DROPDOWN -->
+        <li class="nav-item has-treeview {{ Request::is('admin/program*', 'admin/sekolahformal*', 'admin/datasantri*', 'admin/angkatan*') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-database"></i>
+            <p>
+              DATA MASTER
+              <i class="right fas fa-angle-left"></i>
+            </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ route('program.index') }}" class="nav-link {{ Request::is('admin/program*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>PROGRAM PESANTREN</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('sekolahformal.index') }}" class="nav-link {{ Request::is('admin/sekolahformal*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>SEKOLAH FORMAL</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('datasantri.index') }}" class="nav-link {{ Request::is('admin/datasantri*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>DATA SANTRI</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('angkatan.index') }}" class="nav-link {{ Request::is('admin/angkatan*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>ANGKATAN</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <li class="nav-item">
-          <a href="{{ route('sekolahformal.index') }}" class="nav-link {{ Request::is('admin/sekolahformal*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-school"></i>
-            <p>Sekolah Formal</p>
+        <!-- KEUANGAN DROPDOWN -->
+        <li class="nav-item has-treeview {{ Request::is('admin/postagihan*', 'admin/jenis-pembayaran*', 'admin/tarif-pembayaran*', 'admin/tagihan*', 'admin/pembayaran*') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-money-check-alt"></i>
+            <p>
+              KEUANGAN
+              <i class="right fas fa-angle-left"></i>
+            </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{ route('postagihan.index') }}" class="nav-link {{ Request::is('admin/postagihan*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>POS TAGIHAN</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('jenis-pembayaran.index') }}" class="nav-link {{ Request::is('admin/jenis-pembayaran*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>JENIS TAGIHAN</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('tarif-pembayaran.index') }}" class="nav-link {{ Request::is('admin/tarif-pembayaran*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>TARIF PEMBAYARAN</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('tagihan.index') }}" class="nav-link {{ Request::is('admin/tagihan*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>TAGIHAN SANTRI</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('pembayaran.index') }}" class="nav-link {{ Request::is('admin/pembayaran*') ? 'active' : '' }}">
+                <i class="far fa-circle nav-icon"></i>
+                <p>PEMBAYARAN</p>
+              </a>
+            </li>
+          </ul>
         </li>
 
-        <li class="nav-item">
-          <a href="{{ route('datasantri.index') }}" class="nav-link {{ Request::is('admin/datasantri*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-users"></i>
-            <p>Data Santri</p>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a href="{{ route('angkatan.index') }}" class="nav-link {{ Request::is('admin/angkatan*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-layer-group"></i>
-            <p>Data Angkatan</p>
-          </a>
-        </li>
-
-        {{-- ====== Keuangan (opsional) ====== --}}
-        <li class="nav-header">KEUANGAN</li>
-        <li class="nav-item">
-          <a href="{{ route('postagihan.index') }}" class="nav-link {{ Request::is('admin/postagihan*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-money-bill-wave"></i>
-            <p>Pos Tagihan</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('jenis-pembayaran.index') }}" class="nav-link {{ Request::is('admin/jenis-pembayaran*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-money-bill-wave"></i>
-            <p>Jenis Tagihan</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('tarif-pembayaran.index') }}" class="nav-link {{ Request::is('admin/tarif-pembayaran*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-money-bill-wave"></i>
-            <p>Tarif Pembayaran</p>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="{{ route('tagihan.index') }}" class="nav-link {{ Request::is('admin/tagihan*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-money-bill-wave"></i>
-            <p>Tagihan Santri</p>
-          </a>
-        </li>
-
-        {{-- ====== Logout ====== --}}
+        <!-- LOGOUT -->
         <li class="nav-header">AKSES</li>
         <li class="nav-item">
           <a href="{{ route('logout') }}"
              class="nav-link"
              onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
             <i class="nav-icon fas fa-sign-out-alt text-danger"></i>
-            <p>Logout</p>
+            <p>LOGOUT</p>
           </a>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
             @csrf
           </form>
         </li>
+
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

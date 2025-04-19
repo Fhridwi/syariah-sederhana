@@ -43,4 +43,10 @@ class Tagihan extends Model
     {
         return $this->belongsTo(angkatan::class, 'tahun_ajaran');
     }
+
+    public function pembayaran()
+{
+    return $this->hasOne(Pembayaran::class);
+}
+
 }

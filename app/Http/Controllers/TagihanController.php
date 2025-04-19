@@ -16,28 +16,49 @@ use Illuminate\Support\Str;
 class TagihanController extends Controller
 {
     public function index(Request $request)
-{
-    $query = Santri::with(['tagihans.jenisPembayaran']); // Hapus pembayarans dari sini
+    {
+        // Ambil data program & tahun ajaran unik
+        $programs = Santri::select('program')->distinct()->pluck('program');
+        $tahunAjarans = Tagihan::select('tahun_ajaran')->distinct()->pluck('tahun_ajaran');
+    
+        // Query tagihan dengan relasi
+        $query = Tagihan::with(['santri', 'jenisPembayaran']);
+    
+        // Filter berdasarkan request (kalau ada)
+        if ($request->filled('program')) {
+            $query->whereHas('santri', function ($q) use ($request) {
+                $q->where('program', $request->program);
+            });
+        }
+    
+        if ($request->filled('tahun_ajaran')) {
+            $query->where('tahun_ajaran', $request->tahun_ajaran);
+        }
+    
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+    
+        // Ambil tagihan dan kelompokkan agar tidak duplikat (by santri_id dan tahun_ajaran)
+        $tagihans = $query->get();
+    
+        // Pisahkan tagihan bulanan dan tagihan lainnya
+        $urutanBulan = ['juli', 'agustus', 'september', 'oktober', 'november', 'desember', 'januari', 'februari', 'maret', 'april', 'mei', 'juni'];
 
-    // Filter tetap sama
-    if ($request->filled('program')) {
-        $query->where('program', $request->program);
-    }
+        $tagihanBulanan = $tagihans->filter(function ($tagihan) {
+            return $tagihan->jenisPembayaran->tipe === 'bulanan';
+        })->sortBy(function ($tagihan) use ($urutanBulan) {
+            return array_search(strtolower($tagihan->bulan_tagihan), $urutanBulan);
+        })->groupBy('santri_id');
 
-    if ($request->filled('tahun_ajaran')) {
-        $query->whereHas('tagihans', function($q) use ($request) {
-            $q->where('tahun_ajaran', $request->tahun_ajaran);
+    
+        $tagihanLainnya = $tagihans->filter(function ($tagihan) {
+            return $tagihan->jenisPembayaran->tipe !== 'bulanan';
         });
+    
+        return view('admin.dataTagihan.tagihan_index', compact('tagihanBulanan', 'tagihanLainnya', 'programs', 'tahunAjarans'));
     }
-
-    $santris = $query->get();
-
-    $programs = Santri::select('program')->distinct()->pluck('program');
-    $tahunAjarans = Tagihan::select('tahun_ajaran')->distinct()->pluck('tahun_ajaran');
-
-    return view('admin.dataTagihan.tagihan_index', compact('santris', 'programs', 'tahunAjarans'));
-}
-
+    
     
 
     public function create()
@@ -139,6 +160,10 @@ class TagihanController extends Controller
         }
     
         return redirect()->route('tagihan.index')->with('success', 'Tagihan berhasil dibuat.');
+    }
+
+    public function edit(string $id) {
+        return view('admin.dataTagihan.tagihan_edit');
     }
     
     

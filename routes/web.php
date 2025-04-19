@@ -54,7 +54,6 @@ Route::prefix('admin')->middleware(['auth', 'akses:admin'])->group( function() {
 
 
 
-
     Route::resource('datasantri', SantriController::class);
 });
 

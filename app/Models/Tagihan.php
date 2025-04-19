@@ -39,4 +39,8 @@ class Tagihan extends Model
     {
         return $this->belongsTo(TarifPembayaran::class, 'tarif_pembayaran_id');
     }
+    public function angkatan()
+    {
+        return $this->belongsTo(angkatan::class, 'tahun_ajaran');
+    }
 }

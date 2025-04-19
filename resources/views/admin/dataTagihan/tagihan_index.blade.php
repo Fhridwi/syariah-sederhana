@@ -1,115 +1,298 @@
 @extends('template.app')
 
 @section('content')
-<div class="row">
-    {{-- Sidebar Kiri --}}
-    <div class="col-md-3">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0">Aksi</h5>
-            </div>
-            <div class="card-body">
-                <a href="#" class="btn btn-success btn-block mb-3">+ Tambah Data</a>
+<section class="content">
+    {{-- TAGIHAN BULANAN --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Tagihan santri</h3>
+                    <a href="{{ route('tagihan.create') }}" class="btn btn-primary btn-sm float-right">
+                        <i class="fas fa-plus me-1"></i> Tambah Sekolah
+                    </a>
+                </div>
+                
+                <div class="card-body">
+                    <form method="GET" action="{{ route('tagihan.index') }}" class="row mb-3">
+                        <div class="col-md-3">
+                            <label>Program</label>
+                            <select class="form-control" name="program" onchange="this.form.submit()">
+                                <option value="">Semua Program</option>
+                                @foreach($programs as $program)
+                                    <option value="{{ $program }}" {{ request('program') == $program ? 'selected' : '' }}>{{ $program }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Status</label>
+                            <select class="form-control" name="status" onchange="this.form.submit()">
+                                <option value="">Semua Status</option>
+                                <option value="lunas" {{ request('status') == 'lunas' ? 'selected' : '' }}>Lunas</option>
+                                <option value="belum" {{ request('status') == 'belum' ? 'selected' : '' }}>Belum Lunas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <a href="{{ route('tagihan.index') }}" class="btn btn-default">Reset</a>
+                        </div>
+                    </form>
 
-                <h6>Filter</h6>
-                <form method="GET" action="{{ route('tagihan.index') }}">
-                    <select name="program" class="form-control">
-                        <option value="">-- Semua --</option>
-                        @foreach($programs as $prog)
-                            <option value="{{ $prog }}" {{ request('program') == $prog ? 'selected' : '' }}>
-                                {{ $prog }}
-                            </option>
-                        @endforeach
-                    </select>
-                    
-                    <select name="tahun_ajaran" class="form-control mt-3">
-                        <option value="">-- Semua --</option>
-                        @foreach($tahunAjarans as $tahun)
-                            <option value="{{ $tahun }}" {{ request('tahun_ajaran') == $tahun ? 'selected' : '' }}>
-                                {{ $tahun }}
-                            </option>
-                        @endforeach
-                    </select>
-                    
-
-                    <button class="btn btn-primary btn-block mt-2">Terapkan</button>
-                </form>
+                    <table class="table table-bordered table-hover">
+                        <thead class="bg-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>NIS</th>
+                                <th>Nama</th>
+                                <th>Program</th>
+                                <th>Tahun Ajaran</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($tagihanBulanan as $santriId => $group)
+                                @php
+                                    $santri = $group->first()->santri;
+                                    $tahun = $group->first()->angkatan->tahun;
+                                @endphp
+                                <tr class="santri-row" data-santri="{{ $santriId }}">
+                                    <td>
+                                        <button class="btn btn-sm btn-toggle-detail" data-santri="{{ $santriId }}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ $santri->nis }}</td>
+                                    <td>{{ strtoupper($santri->nama) }}</td>
+                                    <td>{{ $santri->program }}</td>
+                                    <td>{{ $tahun }}</td>
+                                    <td>
+                                        <a href="{{ route('tagihan.edit', $santri->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('tagihan.destroy', $santri->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm" title="Hapus" onclick="return confirm('Yakin hapus?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    
+                                </tr>
+                                <tr class="detail-row" id="detail-{{ $santriId }}" style="display: none;">
+                                    <td colspan="6">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Bulan</th>
+                                                    <th>Jenis</th>
+                                                    <th>Nominal</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($group->sortBy('bulan_tagihan') as $tagihan)
+                                                    <tr>
+                                                        <td>{{ ucfirst($tagihan->bulan_tagihan) }}</td>
+                                                        <td>{{ $tagihan->jenisPembayaran->nama_pembayaran }}</td>
+                                                        <td>Rp {{ number_format($tagihan->nominal, 0, ',', '.') }}</td>
+                                                        <td>
+                                                            <span class="badge {{ $tagihan->status == 'lunas' ? 'badge-success' : 'badge-danger' }}">
+                                                                {{ strtoupper($tagihan->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="btn-group btn-group-sm d-flex justify-content-center gap-2 flex-wrap">
+                                                                @if($santri->telpon_orang_tua)
+                                                                <button class="btn btn-success kirim-wa" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        data-nama="{{ $santri->nama }}"
+                                                                        data-telpon="{{ $santri->telpon_orang_tua }}"
+                                                                        title="Kirim WhatsApp">
+                                                                    <i class="fab fa-whatsapp"></i>
+                                                                </button>
+                                                                @endif
+                                                                @if($santri->email_orang_tua)
+                                                                <button class="btn btn-danger kirim-email" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        data-nama="{{ $santri->nama }}"
+                                                                        data-email="{{ $santri->email_orang_tua }}"
+                                                                        title="Kirim Email">
+                                                                    <i class="fas fa-envelope"></i>
+                                                                </button>
+                                                                @endif
+                                                                <a href="{{ route('tagihan.create', ['santri_id' => $santri->id]) }}" 
+                                                                   class="btn btn-primary" title="Tambah Tagihan">
+                                                                    <i class="fas fa-plus"></i>
+                                                                </a>
+                                                                <button class="btn btn-info cetak-tagihan" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        title="Cetak Tagihan">
+                                                                    <i class="fas fa-print"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    {{-- Konten Kanan --}}
-    <div class="col-md-9">
-        <div class="card">
-            <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Data Tagihan Wali Santri</h5>
-            </div>
-            <div class="card-body">
-                @foreach($santris as $santri)
-                    <div class="mb-3 border p-3 rounded">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ $santri->nama }}</strong> ({{ $santri->program }}) - {{ $santri->angkatan }}
-                            </div>
-                            <button class="btn btn-sm btn-outline-secondary toggle-tagihan" data-id="{{ $santri->id }}">
-                                Tampilkan Tagihan
-                            </button>
-                        </div>
-
-                        <div class="tagihan-detail mt-3" id="tagihan-{{ $santri->id }}" style="display: none;">
-                            {{-- Kelompokkan tagihan --}}
-                            @php
-                                $bulanan = $santri->tagihans->filter(fn($t) => $t->jenisPembayaran->tipe == 'bulanan');
-                                $semesteran = $santri->tagihans->filter(fn($t) => $t->jenisPembayaran->tipe == 'semesteran');
-                                $tahunan = $santri->tagihans->filter(fn($t) => $t->jenisPembayaran->tipe == 'tahunan');
-                            @endphp
-
-                            @if($bulanan->isNotEmpty())
-                                <h6 class="mt-2">Tagihan Bulanan</h6>
-                                <ul>
-                                    @foreach($bulanan as $b)
-                                        <li>{{ $b->jenisPembayaran->nama }} - Rp {{ number_format($b->nominal) }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-
-                            @if($semesteran->isNotEmpty())
-                                <h6 class="mt-2">Tagihan Semesteran</h6>
-                                <ul>
-                                    @foreach($semesteran as $s)
-                                        <li>{{ $s->jenisPembayaran->nama }} - Rp {{ number_format($s->nominal) }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-
-                            @if($tahunan->isNotEmpty())
-                                <h6 class="mt-2">Tagihan Tahunan / Lainnya</h6>
-                                <ul>
-                                    @foreach($tahunan as $t)
-                                        <li>{{ $t->jenisPembayaran->nama }} - Rp {{ number_format($t->nominal) }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
+    {{-- TAGIHAN LAINNYA --}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Tagihan Lainnya / Bebas</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead class="bg-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>NIS</th>
+                                <th>Nama</th>
+                                <th>Program</th>
+                                <th>Tahun Ajaran</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($tagihanLainnya->groupBy('santri_id') as $santriId => $group)
+                                @php
+                                    $santri = $group->first()->santri;
+                                    $tahun = $group->first()->angkatan->tahun;
+                                @endphp
+                                <tr class="santri-row" data-santri="lain-{{ $santriId }}">
+                                    <td>
+                                        <button class="btn btn-sm btn-toggle-detail" data-santri="lain-{{ $santriId }}">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </td>
+                                    <td>{{ $santri->nis }}</td>
+                                    <td>{{ strtoupper($santri->nama) }}</td>
+                                    <td>{{ $santri->program }}</td>
+                                    <td>{{ $tahun }}</td>
+                                    <td>
+                                        <a href="{{ route('tagihan.edit', $santri->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('tagihan.destroy', $santri->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm" title="Hapus" onclick="return confirm('Yakin hapus?')">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    
+                                </tr>
+                                <tr class="detail-row" id="detail-lain-{{ $santriId }}" style="display: none;">
+                                    <td colspan="6">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Jenis</th>
+                                                    <th>Nominal</th>
+                                                    <th>Status</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($group as $tagihan)
+                                                    <tr>
+                                                        <td>{{ $tagihan->jenisPembayaran->nama_pembayaran }}</td>
+                                                        <td>Rp {{ number_format($tagihan->nominal, 0, ',', '.') }}</td>
+                                                        <td>
+                                                            <span class="badge {{ $tagihan->status == 'lunas' ? 'badge-success' : 'badge-danger' }}">
+                                                                {{ strtoupper($tagihan->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <div class="btn-group btn-group-sm d-flex justify-content-center gap-2 flex-wrap">
+                                                                @if($santri->telpon_orang_tua)
+                                                                <button class="btn btn-success kirim-wa" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        data-nama="{{ $santri->nama }}"
+                                                                        data-telpon="{{ $santri->telpon_orang_tua }}"
+                                                                        title="Kirim WhatsApp">
+                                                                    <i class="fab fa-whatsapp"></i>
+                                                                </button>
+                                                                @endif
+                                                                @if($santri->email_orang_tua)
+                                                                <button class="btn btn-danger kirim-email" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        data-nama="{{ $santri->nama }}"
+                                                                        data-email="{{ $santri->email_orang_tua }}"
+                                                                        title="Kirim Email">
+                                                                    <i class="fas fa-envelope"></i>
+                                                                </button>
+                                                                @endif
+                                                                <a href="{{ route('tagihan.create', ['santri_id' => $santri->id]) }}" 
+                                                                   class="btn btn-primary" title="Tambah Tagihan">
+                                                                    <i class="fas fa-plus"></i>
+                                                                </a>
+                                                                <button class="btn btn-info cetak-tagihan" 
+                                                                        data-santri="{{ $santriId }}"
+                                                                        title="Cetak Tagihan">
+                                                                    <i class="fas fa-print"></i>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        
+                                                        
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>                    
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <script>
-    $(document).ready(function () {
-        $('.toggle-tagihan').click(function () {
-            const id = $(this).data('id');
-            const detail = $('#tagihan-' + id);
+   document.addEventListener('DOMContentLoaded', function () {
+    const toggleButtons = document.querySelectorAll('.btn-toggle-detail');
 
-            // Sembunyikan semua
-            $('.tagihan-detail').not(detail).slideUp();
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const santriId = this.dataset.santri;
+            const detailRow = document.getElementById('detail-' + santriId);
+            const icon = this.querySelector('i');
 
-            // Toggle yang diklik
-            detail.slideToggle();
+            const isVisible = detailRow.style.display === 'table-row';
+
+            // Sembunyikan semua detail dulu
+            document.querySelectorAll('.detail-row').forEach(row => row.style.display = 'none');
+            document.querySelectorAll('.btn-toggle-detail i').forEach(ic => {
+                ic.classList.remove('fa-minus');
+                ic.classList.add('fa-plus');
+            });
+
+            // Kalau sebelumnya belum tampil, tampilkan
+            if (!isVisible) {
+                detailRow.style.display = 'table-row';
+                icon.classList.remove('fa-plus');
+                icon.classList.add('fa-minus');
+            }
         });
     });
+});
+
 </script>
 @endsection
